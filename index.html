@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wake Lock & Contador</title>
+</head>
+<body>
+<h1>Wake Lock & Contador de Cliques</h1>
+<button id="clickButton">Cliques: 0</button>
+
+<script>
+  let count = 0;
+  let wakeLock = null;
+
+  async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('Wake Lock ativado');
+
+        wakeLock.addEventListener('release', () => {
+          console.log('Wake Lock liberado');
+        });
+      } catch (err) {
+        console.error('Erro ao ativar Wake Lock:', err);
+      }
+    } else {
+      console.warn('Wake Lock API não suportada neste navegador.');
+    }
+  }
+
+  document.getElementById('clickButton').addEventListener('click', () => {
+    count++;
+    document.getElementById('clickButton').innerText = `Cliques: ${count}`;
+    requestWakeLock(); // Ativa o Wake Lock ao clicar
+  });
+</script>
+</body>
+</html>
